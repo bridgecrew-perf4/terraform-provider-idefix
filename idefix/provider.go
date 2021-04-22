@@ -12,21 +12,18 @@ import (
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"url": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("IDEFIX_URL", "https://extranet.linkbynet.com/api/1.1"),
-			},
 			"login": {
 				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("IDEFIX_LOGIN", nil),
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("IDEFIX_LOGIN", ""),
+				Description: "The login wich should be used. This can also be sourced from the `IDEFIX_LOGIN` environment variable.",
 			},
 			"password": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.EnvDefaultFunc("IDEFIX_PASSWORD", nil),
+				DefaultFunc: schema.EnvDefaultFunc("IDEFIX_PASSWORD", ""),
+				Description: "The password wich should be used. This can also be sourced from the `IDEFIX_PASSWORD` environment variable.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -45,11 +42,10 @@ func Provider() *schema.Provider {
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	url := d.Get("url").(string)
 	login := d.Get("login").(string)
 	password := d.Get("password").(string)
 
-	client, err := goidefix.NewWithEndpoint(ctx, url)
+	client, err := goidefix.New(ctx)
 	if err != nil {
 		return nil, diag.FromErr(err)
 	}

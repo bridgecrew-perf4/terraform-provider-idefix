@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/google/go-cmp v0.5.5 // indirect
 	github.com/hashicorp/hcl/v2 v2.8.2 // indirect
+	github.com/hashicorp/terraform-plugin-docs v0.4.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.6.0
 	github.com/linkbynet/goidefix v0.0.0-00010101000000-000000000000
 	github.com/mattn/go-colorable v0.1.8 // indirect

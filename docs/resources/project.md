@@ -3,12 +3,12 @@
 page_title: "idefix_project Resource - terraform-provider-idefix"
 subcategory: ""
 description: |-
-  
+  Manages project.
 ---
 
 # idefix_project (Resource)
 
-
+Manages project.
 
 ## Example Usage
 
@@ -24,13 +24,16 @@ resource "idefix_project" "example" {
 
 ### Required
 
-- **company_id** (Number) Company associated to the project.
-- **name** (String) Name of project (must be unique).
+- **company_id** (Number) The company ID associated to the CI.
+- **name** (String) The name of project (must be unique).
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **parent_id** (Number) Parent project.
+- **parent_id** (Number) The ID of the parent project.
+
+### Read-Only
+
+- **id** (String) The id of the project.
 
 ## Import
 

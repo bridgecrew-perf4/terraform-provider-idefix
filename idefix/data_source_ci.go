@@ -14,45 +14,60 @@ import (
 func dataSourceCI() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceCIRead,
+		Description: "Use this data source to access information about an existing CI.",
 		Schema: map[string]*schema.Schema{
 			"id": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The ID of this resource.",
+			},
+			"name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The name of this CI.",
 			},
 			"type_id": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The type of the CI.",
 			},
 			"company_id": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The company ID associated to the CI.",
 			},
 			"project_ids": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "The projects associated to the CI.",
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 			"outsourcing_name": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The Outsourcing level name.",
 			},
 			"service_level_id": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The Level of the service.",
 			},
 			"team": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The team in charge.",
 			},
 			"is_owner_lbn": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "The owner of the CI.",
 			},
 			"comment": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Comment.",
 			},
 		},
 	}

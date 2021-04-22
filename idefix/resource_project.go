@@ -15,21 +15,27 @@ func resourceProject() *schema.Resource {
 		ReadContext:   resourceProjectRead,
 		UpdateContext: resourceProjectUpdate,
 		DeleteContext: resourceProjectDelete,
+		Description:   "Manages project.",
 		Schema: map[string]*schema.Schema{
+			"id": {
+				Description: "The id of the project.",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Name of project (must be unique).",
+				Description: "The name of project (must be unique).",
 			},
 			"company_id": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Company associated to the project.",
+				Description: "The company ID associated to the CI.",
 			},
 			"parent_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Parent project.",
+				Description: "The ID of the parent project.",
 			},
 		},
 		Importer: &schema.ResourceImporter{

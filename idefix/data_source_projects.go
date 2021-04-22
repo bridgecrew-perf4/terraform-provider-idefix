@@ -14,23 +14,33 @@ import (
 func dataSourceProjects() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceProjectsRead,
+		Description: "Use this data source to access information about existing Projects.",
 		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
+			"id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The ID of this resource.",
+			},
+			"name_filter": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Name to filter the list of projects.",
 			},
 			"projects": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "The projects list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The ID of the project.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The Name of the project.",
 						},
 					},
 				},
@@ -44,7 +54,7 @@ func dataSourceProjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 
 	client := m.(*goidefix.Idefix)
 	resp, err := client.Project.Search(ctx, &project.SearchRequest{
-		Name: d.Get("name").(string),
+		Name: d.Get("name_filter").(string),
 	})
 	if err != nil {
 		return diag.FromErr(err)
