@@ -44,3 +44,5 @@ jobs:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           # GitHub sets this automatically
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOPRIVATE: "github.com/linkbynet/goidefix"
+          GOPRIVATE_TOKEN: ${{ secrets.GOPRIVATE_TOKEN }}
