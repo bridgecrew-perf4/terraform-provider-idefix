@@ -12,6 +12,12 @@ import (
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
+			"url": {
+				Type:        schema.TypeString,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("IDEFIX_URL", ""),
+				Description: "This can be used to override the base URL for Idefix API. This can also be sourced from the `IDEFIX_URL` environment variable.",
+			},
 			"login": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -41,11 +47,18 @@ func Provider() *schema.Provider {
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	var diags diag.Diagnostics
+	var client *goidefix.Idefix
+	var err error
 
+	url := d.Get("url").(string)
 	login := d.Get("login").(string)
 	password := d.Get("password").(string)
 
-	client, err := goidefix.New(ctx)
+	if url == "" {
+		client, err = goidefix.New(ctx)
+	} else {
+		client, err = goidefix.NewWithEndpoint(ctx, url)
+	}
 	if err != nil {
 		return nil, diag.FromErr(err)
 	}

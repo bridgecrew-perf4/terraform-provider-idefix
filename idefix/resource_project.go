@@ -76,6 +76,12 @@ func resourceProjectRead(ctx context.Context, d *schema.ResourceData, m interfac
 		return diag.FromErr(err)
 	}
 
+	if project == nil {
+		d.SetId("")
+
+		return diags
+	}
+
 	d.SetId(d.Id())
 	d.Set("name", project.Name)
 	d.Set("company_id", project.CompanyID)

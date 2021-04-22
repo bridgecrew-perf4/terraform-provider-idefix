@@ -1,3 +1,3 @@
 data "idefix_projects" "example" {
-  name = "myproject"
+  name_filter = "myproject"
 }

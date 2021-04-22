@@ -13,6 +13,7 @@ The Idefix provider provides resources to interact with the Idefix API.
 
 ```terraform
 provider "idefix" {
+  url      = var.url
   login    = var.login
   password = var.password
 }
@@ -25,3 +26,4 @@ provider "idefix" {
 
 - **login** (String) The login wich should be used. This can also be sourced from the `IDEFIX_LOGIN` environment variable.
 - **password** (String, Sensitive) The password wich should be used. This can also be sourced from the `IDEFIX_PASSWORD` environment variable.
+- **url** (String) This can be used to override the base URL for Idefix API. This can also be sourced from the `IDEFIX_URL` environment variable.

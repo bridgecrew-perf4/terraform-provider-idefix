@@ -76,14 +76,16 @@ func dataSourceCI() *schema.Resource {
 func dataSourceCIRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	// id := strconv.Itoa(d.Get("id").(int))
-
 	client := m.(*goidefix.Idefix)
 	ci, err := client.CI.Read(ctx, &ci.ReadRequest{
 		ID: d.Get("id").(string),
 	})
 	if err != nil {
 		diag.FromErr(err)
+	}
+
+	if ci == nil {
+		return diags
 	}
 
 	var projectIDs []int

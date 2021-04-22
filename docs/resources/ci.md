@@ -26,7 +26,6 @@ resource "idefix_ci" "example" {
 ### Required
 
 - **company_id** (Number) The company ID associated to the CI.
-- **id** (String) The ID of this resource.
 - **name** (String) The name of this CI.
 - **project_ids** (List of Number) The projects associated to the CI.
 
@@ -38,6 +37,10 @@ resource "idefix_ci" "example" {
 - **service_level_id** (Number) The Level of the service.
 - **team** (String) The team in charge.
 - **type_id** (Number) The type of the CI.
+
+### Read-Only
+
+- **id** (String) The ID of this resource.
 
 ## Import
 
