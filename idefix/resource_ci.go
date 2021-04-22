@@ -21,7 +21,7 @@ func resourceCI() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Computed:    true,
 				Description: "The ID of this resource.",
 			},
 			"name": {
@@ -93,7 +93,7 @@ func resourceCICreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		projectIDs[i] = ids[i].(int)
 	}
 
-	_, err := client.CI.Create(ctx, &ci.CreateRequest{
+	ci, err := client.CI.Create(ctx, &ci.CreateRequest{
 		Name:            d.Get("name").(string),
 		TypeID:          d.Get("type_id").(int),
 		CompanyID:       d.Get("company_id").(int),
@@ -107,6 +107,8 @@ func resourceCICreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
+	d.SetId(ci.ID)
 
 	return resourceCIRead(ctx, d, m)
 }
@@ -135,10 +137,15 @@ func resourceCIRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 		}
 	}
 
+	typeID, err := strconv.Atoi(ci.TypeID)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	d.SetId(d.Id())
 	d.Set("name", ci.Name)
 	d.Set("company_id", ci.CompanyID)
-	d.Set("type_id", ci.TypeID)
+	d.Set("type_id", typeID)
 	d.Set("company_id", ci.CompanyID)
 	d.Set("project_ids", projectIDs)
 	d.Set("outsourcing_name", ci.OutSourcingName)

@@ -23,7 +23,7 @@ func dataSourceCI() *schema.Resource {
 			},
 			"name": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Computed:    true,
 				Description: "The name of this CI.",
 			},
 			"type_id": {
@@ -76,11 +76,11 @@ func dataSourceCI() *schema.Resource {
 func dataSourceCIRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	id := strconv.Itoa(d.Get("id").(int))
+	// id := strconv.Itoa(d.Get("id").(int))
 
 	client := m.(*goidefix.Idefix)
 	ci, err := client.CI.Read(ctx, &ci.ReadRequest{
-		ID: id,
+		ID: d.Get("id").(string),
 	})
 	if err != nil {
 		diag.FromErr(err)
@@ -99,9 +99,14 @@ func dataSourceCIRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		}
 	}
 
+	typeID, err := strconv.Atoi(ci.TypeID)
+	if err != nil {
+		diag.FromErr(err)
+	}
+
 	d.Set("name", ci.Name)
 	d.Set("company_id", ci.CompanyID)
-	d.Set("type_id", ci.TypeID)
+	d.Set("type_id", typeID)
 	d.Set("company_id", ci.CompanyID)
 	d.Set("project_ids", projectIDs)
 	d.Set("outsourcing_name", ci.OutSourcingName)
@@ -110,7 +115,7 @@ func dataSourceCIRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	d.Set("is_owner_lbn", ci.IsOwnerLBN)
 	d.Set("comment", ci.Comment)
 
-	d.SetId(id)
+	d.SetId(d.Get("id").(string))
 
 	return diags
 }
