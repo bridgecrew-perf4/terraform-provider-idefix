@@ -11,8 +11,8 @@
 # Idefix Provider source and version being used
 terraform {
   required_providers {
-    azurerm = {
-      source = "hashicorp/linkbynet/idefix"
+    idefix = {
+      source = "linkbynet/idefix"
       version = "=0.0.1"
     }
   }
