@@ -9,6 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/linkbynet/goidefix"
 	"github.com/linkbynet/goidefix/services/ci"
+	"github.com/linkbynet/goidefix/services/equipment"
+	"github.com/linkbynet/goidefix/services/monitoring"
 )
 
 func resourceCI() *schema.Resource {
@@ -189,7 +191,29 @@ func resourceCIDelete(ctx context.Context, d *schema.ResourceData, m interface{}
 	var diags diag.Diagnostics
 
 	client := m.(*goidefix.Idefix)
-	_, err := client.CI.Delete(ctx, &ci.DeleteRequest{
+
+	id, err := strconv.Atoi(d.Id())
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	events, err := client.Monitoring.SearchEvents(ctx, &monitoring.SearchEventsRequest{
+		EquipmentIDs: []int{id},
+	})
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	for _, event := range *events {
+		_, err := client.Monitoring.DeleteEvents(ctx, &monitoring.DeleteEventsRequest{
+			ID: event.ID,
+		})
+		if err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
+	_, err = client.Equipment.Delete(ctx, &equipment.DeleteRequest{
 		ID: d.Id(),
 	})
 	if err != nil {
