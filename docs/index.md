@@ -13,7 +13,6 @@ The Idefix provider provides resources to interact with the Idefix API.
 
 ```terraform
 provider "idefix" {
-  url      = var.url
   login    = var.login
   password = var.password
 }

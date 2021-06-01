@@ -80,21 +80,24 @@ func resourceCI() *schema.Resource {
 				Description: "Comment.",
 			},
 			"service_at": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Computed:    true,
+				Description: "Services AT.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"required_services": {
-							Type:     schema.TypeList,
-							Required: true,
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: "Required Services IDs.",
 							Elem: &schema.Schema{
 								Type: schema.TypeInt,
 							},
 						},
 						"monitoring_tool": {
-							Type:     schema.TypeList,
-							Required: true,
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: "Monitoring Tool IDs.",
 							Elem: &schema.Schema{
 								Type: schema.TypeInt,
 							},
@@ -103,21 +106,24 @@ func resourceCI() *schema.Resource {
 				},
 			},
 			"key_dates": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Computed:    true,
+				Description: "Use And Key Date.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"environment_ids": {
-							Type:     schema.TypeList,
-							Required: true,
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: "Environments of the CI.",
 							Elem: &schema.Schema{
 								Type: schema.TypeInt,
 							},
 						},
 						"function_ids": {
-							Type:     schema.TypeList,
-							Required: true,
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: "Functions of the CI.",
 							Elem: &schema.Schema{
 								Type: schema.TypeInt,
 							},
@@ -126,22 +132,26 @@ func resourceCI() *schema.Resource {
 				},
 			},
 			"service_cloud": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Computed:    true,
+				Description: "Service Cloud.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"subscription_id": {
-							Type:     schema.TypeInt,
-							Required: true,
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "The Subscription ID of the CI.",
 						},
 						"product_id": {
-							Type:     schema.TypeInt,
-							Required: true,
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "The Product ID of the CI.",
 						},
 						"region_id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "The Region ID of the CI.",
 						},
 					},
 				},
@@ -196,8 +206,9 @@ func resourceCICreate(ctx context.Context, d *schema.ResourceData, m interface{}
 				productID = v
 			}
 
-			if v, ok := serviceCloud["region_id"].(string); ok && v != "" {
-				regionID = v
+			if v, ok := serviceCloud["region_id"].(int); ok && v > 0 {
+				regionID = strconv.Itoa(v)
+
 			}
 
 			_, err := client.CI.UpdateServiceCloud(ctx, &ci.UpdateServiceCloudRequest{
@@ -348,7 +359,10 @@ func resourceCIRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	serviceCloud := map[string]interface{}{}
 	serviceCloud["subscription_id"] = sc.SubscriptionID
 	serviceCloud["product_id"] = sc.ProductID
-	serviceCloud["region_id"] = sc.RegionID
+	serviceCloud["region_id"], err = strconv.Atoi(sc.RegionID)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	var serviceCloudSet []interface{}
 	serviceCloudSet = append(serviceCloudSet, serviceCloud)
@@ -499,8 +513,8 @@ func resourceCIUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 				productID = v
 			}
 
-			if v, ok := serviceCloud["region_id"].(string); ok && v != "" {
-				regionID = v
+			if v, ok := serviceCloud["region_id"].(int); ok && v > 0 {
+				regionID = strconv.Itoa(v)
 			}
 
 			_, err := client.CI.UpdateServiceCloud(ctx, &ci.UpdateServiceCloudRequest{

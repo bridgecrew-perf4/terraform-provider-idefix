@@ -14,7 +14,7 @@ Use this data source to access information about existing Projects.
 
 ```terraform
 data "idefix_projects" "example" {
-  name = "myproject"
+  name_filter = "myproject"
 }
 ```
 
